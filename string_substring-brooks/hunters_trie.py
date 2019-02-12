@@ -1,31 +1,18 @@
-class HuntersTrieNode():
-
+class TrieNode():
     def __init__(self, char, partent_node):
-        self.char = char
+        self.char = char # Using ord(char) will allow for slightly faster comparison later on maybe. 
         self.children = {}
         self.partent_node = partent_node
         self.is_terminal = False
-
     def add_string(self, string_to_add):
-        # print('add_string', '-'*10)
-        # print('self.char:', self.char)
-        # print('self.children:', self.children)
-        # print('string_to_add:', string_to_add)
-
         if len(string_to_add) > 0:
             char_to_add = string_to_add[0]
             if char_to_add not in self.children:
-                self.children[char_to_add] = HuntersTrieNode(char_to_add, self)
+                self.children[char_to_add] = TrieNode(char_to_add, self)
             self.children[char_to_add].add_string(string_to_add[1:])
         else:
             self.is_terminal = True
-
     def search(self, string_to_search_for):
-        # print('search', '-'*10)
-        # print('self.char:', self.char)
-        # print('self.children:', self.children)
-        # print('string_to_search_for:', string_to_search_for)
-
         if len(string_to_search_for) == 0:
             if self.is_terminal:
                 return True
@@ -37,11 +24,11 @@ class HuntersTrieNode():
                 return False
             else:
                 return self.children[active_char].search(string_to_search_for[1:])
-       
 
-class HuntersTrie():
+
+class Trie():
     def __init__(self):
-        self.root_node = HuntersTrieNode('<', None)
+        self.root_node = TrieNode('<', None)
     def add_word(self, word):
         self.root_node.add_string(word)
     # def add_words(self, iter):
@@ -53,7 +40,7 @@ class HuntersTrie():
         """
         1. Make a list of all leaf nodes.
         2. Go backwards up family tree of leaf nodes, capturing string.
-        3. Reverse string to get word.
+        3. Reverse string to get word. (relys on nodes having parent_node property!)
         """
         children = [self.root_node]
         leaves = []
@@ -77,12 +64,13 @@ class HuntersTrie():
 
 if __name__ == '__main__':
     # Tests:
-    t = HuntersTrie()
+    t = Trie()
     t.add_word('abc')
     t.add_word('abcd')
     t.add_word('xyz')
     assert t.prefix_search('abc') == True
     assert t.prefix_search('abcd') == True
     assert t.prefix_search('xyz') == True
-    # print(t.get_structure())
+    assert t.prefix_search('not_present') == False
+    assert t.get_structure() == ['abc','abcd', 'xyz']
     
