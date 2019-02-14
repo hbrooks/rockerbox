@@ -1,3 +1,21 @@
+"""
+During my exploration of substring discovery, a few different techniques came to mind.  In
+this file, I explore using different algorithsm and data structures to solve the
+problem.
+
+Helper functions are prefixed with a leading underscore in the fuctnion name
+
+All other functions should are higher order functions.  They return a function that can be
+used to find which words exist in a substring.  I structured these different matching techinques
+this way because I assume the set of words we're trying to find in URLs to be slowly or never
+changing.  The higher order function will be called when the service/function is initialized,
+for example before working on a batch of URLs or before a REST service is configured for use.
+
+At runtime, the result of the higher order functions is called with the URL as the sole argument.
+
+Each lower level matching function returns a set containing the matched words.
+"""
+
 import re
 import itertools
 
@@ -57,7 +75,8 @@ def create_match_using_regex(words):
     we create length_to_words_of_that_length={1:[a,b], 2:[ab], 3:[xyz]}
     then patterns = [re.compile('(a|b)'), re.compile('(ab)'), re.compile('(xyz)')]
     """
-    d = {} # This all could be done in one or two comprehension expressions, but is kept longer for clarity.
+    # This set up logic is a little confusing and could be written using comprehension expressions.
+    d = {}
     for word in words:
         l = len(word)
         if l not in d:

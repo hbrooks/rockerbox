@@ -1,14 +1,3 @@
-"""
-Background:
-Assume you are designing a performance application to match keywords found in a url. What data structures / technologies would you employ to ensure a speedy (sub 10ms) algorithm that is able to match substrings against the URL? To help shape your thinking, let's assume that were dealing with a finite subset of words. This may help bound which algorithms would be most applicable for this problem. 
-
-Please also provide an actual code sample. Always helpful to see a running example but obviously doesn't need to be ready for production. 
-
-Please zip the contents of your solution named: `string_substring-[lastname].zip`
---------
-I'm assuming during the match we need to know which words we matched to.
-Run in parallel.
-"""
 import time
 import random
 
@@ -41,34 +30,37 @@ def preprocess_words(words):
     return {word.lower() for word in words if len(word) > 1 and word.isalpha()}
 
 
-def test_functionality(name_to_function_mapping):
+def test_functionality(name_to_function_mapping, word_source):
     """
     Though not a substitue for production grade Behave tests, this funciton
     tests to make sure my the matching functions operate as expected.
     """
+    if word_source not in ['./nouns.txt']:
+        raise NotImplementedError('\nAt the moment, functional tests are only supported when using nouns.txt as the word source.')
+
     TEST_CASES = [
         {
             'url': 'www.apple.com',
-            'expected_words': sorted(['app', 'apple'])
+            'expected_words': {'app', 'apple'}
         },
         {
             'url': 'www.facebook.com',
-            'expected_words': sorted(['book', 'face'])
+            'expected_words': {'book', 'face'}
         },
         {
             'url': 'www.linkedin.com',
-            'expected_words': sorted(['ink', 'link'])
+            'expected_words': {'ink', 'link'}
         },
         {
             'url': 'www.google.com/search?q=how-old-is-the-earth',
-            'expected_words': sorted(['earth','arch','art','ear','sea','search'])
+            'expected_words': {'earth','arch','art','ear','sea','search'}
         },
     ]
     for function_name in sorted(name_to_function_mapping.keys()):
         for test_case in TEST_CASES:
             url = test_case['url']
             expected_words = test_case['expected_words']
-            func_result = sorted(name_to_function_mapping[function_name](url))
+            func_result = name_to_function_mapping[function_name](url)
             if func_result != expected_words:
                 error_string = '''{function_name} didn't return the expected words for "{url}"
                 Expected: {expected_words}
@@ -83,9 +75,9 @@ def test_functionality(name_to_function_mapping):
 
 
 def main():
-    # word_source = '/usr/share/dict/words' # TODO: Make configurable.
-    # word_source = './words.txt' # From: https://github.com/first20hours/google-10000-english/blob/master/20k.txt
+    # TODO: Make this a CLI prompt.
     word_source = './nouns.txt' # From: http://www.desiquintans.com/downloads/nounlist/nounlist.txt
+    # word_source = '/usr/share/dict/words'
 
     words = load_words(word_source)
     print('\nThe number of unique words in {}:'.format(word_source), len(words))
@@ -99,7 +91,7 @@ def main():
         'native_set_intersection': create_match_using_set_intersection(words)
     }
     
-    test_functionality(method_name_to_method_matching_function)
+    test_functionality(method_name_to_method_matching_function, word_source)
     print('\nFunctional tests passed.')
 
 
