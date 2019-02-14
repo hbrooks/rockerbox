@@ -2,22 +2,22 @@ import time
 import random
 
 
-from matching_methods import create_match_using_native
-from matching_methods import create_match_using_regex
-from matching_methods import create_match_using_set_intersection
-from matching_methods import create_match_using_trie
+from matching_methods import create_match_function_using_native
+from matching_methods import create_match_function_using_regex
+from matching_methods import create_match_function_using_set_intersection
+from matching_methods import create_match_function_using_trie
 
 
 def load_words(file_name):
     """
-    Returns the contents of `file_name` as a set for O(const) lookup.
+    Returns the contents of `file_name` as a frozenset for constant order lookup.
     """
     with open(file_name) as file_stream:
         words = file_stream.read().split('\n')
     # Newlines at the end of files cause an empty string to be in `words`.  When this happens, remove it:
     if '' in words:
         words = words[:-1]
-    return preprocess_words(set(words))
+    return frozenset(preprocess_words(words))
    
     
 def preprocess_words(words):
@@ -41,19 +41,19 @@ def test_functionality(name_to_function_mapping, word_source):
     TEST_CASES = [
         {
             'url': 'www.apple.com',
-            'expected_words': {'app', 'apple'}
+            'expected_words': frozenset({'app', 'apple'})
         },
         {
             'url': 'www.facebook.com',
-            'expected_words': {'book', 'face'}
+            'expected_words': frozenset({'book', 'face'})
         },
         {
             'url': 'www.linkedin.com',
-            'expected_words': {'ink', 'link'}
+            'expected_words': frozenset({'ink', 'link'})
         },
         {
             'url': 'www.google.com/search?q=how-old-is-the-earth',
-            'expected_words': {'earth','arch','art','ear','sea','search'}
+            'expected_words': frozenset({'earth','arch','art','ear','sea','search'})
         },
     ]
     for function_name in sorted(name_to_function_mapping.keys()):
@@ -106,10 +106,10 @@ def main():
 
     # Create the matching functions!
     method_name_to_method_matching_function = {
-        'regex_match': create_match_using_regex(words),
-        'trie_match': create_match_using_trie(words),
-        'native_python': create_match_using_native(words),
-        'native_set_intersection': create_match_using_set_intersection(words)
+        'regex_match': create_match_function_using_regex(words),
+        # 'trie_match': create_match_function_using_trie(words),
+        # 'native_python': create_match_function_using_native(words),
+        # 'native_set_intersection': create_match_function_using_set_intersection(words)
     }
     
     test_functionality(method_name_to_method_matching_function, word_source)

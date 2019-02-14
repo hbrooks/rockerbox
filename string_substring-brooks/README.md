@@ -17,13 +17,15 @@ Please zip the contents of your solution named: `string_substring-[lastname].zip
 
 
 ### Structure of Submission:
-I really enjoyed this assingment!  My solution is probably more involved than the average submission, but I had fun thinking about the best way to find substrings using Python3.  My solution consists of a few different approaches that came to mind, functional tests to make sure the logic of those implementions is sound, and performance tests to gauge which are the fastest algorithms.  
+I really enjoyed this assingment!  My solution is probably more involved than the average submission, but I had fun thinking about the best way to find substrings using Python3.  To get a quick result, run `python evaluate_methods.py` and read only this section.
+
+Before settingly on a best solution, I explored a few different approaches.  For each appraoch, I perform functional (unit) tests to make sure the logic of those implementions is sound and performance tests to gauge which are the fastest algorithms.  
 
 Found in `matching_methods.py`, my considered solutions are:
-- Using native Python substring. Example: `sub_string in string`.  This is faster than Python's `string.find()` method, which only should be used when we need to get the index of a substring.  See this implementation here.  
+- Using native Python substring. Example: `sub_string in string`.  I considered Python's `string.find()` method, but it seems that it should be used when we need to get the index of a substring.  See this implementation here.  
 - Using Regular Expressions. I created large matching patterns from the words in the word source, then used non-greedy matching to find the matches.  This implementation can be found with more details here.  
 - Using Set Intersection.  Faster than a list's O(N) lookup, set's provide constant order look up because they hash elements.  I leveraged this by creating a set of all the possible string combinations in a URL and doing a speedy set intersection between a set of the words in the word source and the string combinations in the URL.  More details here.
-- Trie.  I created a Trie data structure in `hunters_trie.py` and use it to do prefix lookup of each of the possible string combinations in the URL.
+- Trie.  I created a Trie data structure in `hunters_trie.py` and use it to do prefix lookup of each of the possible string combinations in the URL.  It could be improved in a few ways, one of which is by using ASCII string integer values instead of their string values. 
 
 All the matching functions take in a single URL as their argument.  The time on average to match a URL would be lower if they took in an iterable of URLs, but I kept it this way because I imagine this app being some sort of "tagging" microservice that works on individual URLs at run time.  
 
