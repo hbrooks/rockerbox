@@ -15,6 +15,8 @@ All the matching functions take in a single URL as their argument.  The time on 
 
 I dont use any forms of parallel computing anywhere.  This could seriously speed up things, like the regex pattern evaluation!
 
+It's worth noting that there are plenty of more advanced substring finding algorithms that we could apply based on the details of how long the URL is and how long each word we're trying to scan for is.  Rabin-Karp and Knuth-Morris-Prat come to mind.
+
 Thanks for investigating my submission!
 
 
