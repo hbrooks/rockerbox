@@ -74,6 +74,27 @@ def test_functionality(name_to_function_mapping, word_source):
                 raise ValueError(error_string)
 
 
+def test_performance(name_to_function_mapping):
+    """
+    Returns a dictionaries containing information about the average matching
+    time in miliseconds of each of the items in name_to_function_mapping.  Assumes
+    the perf_testing_URLs.txt file exists!
+    """
+    n_trails = 5 # How many samples of performance on the urls to measure.
+    with open('./perf_testing_URLs.txt') as file_stream:
+        urls = file_stream.read().split('\n')
+    average_trail_times = {}
+    for name, matching_function in name_to_function_mapping.items():
+        average_trail_times[name] = []
+        for _ in range(n_trails):
+            start_time = time.time()
+            for url in urls:
+                matching_function(url)
+            end_time = time.time()
+            average_trail_times[name].append((end_time-start_time)/len(urls))
+    return {name: (sum(data)/n_trails)*1000. for name, data in average_trail_times.items()}
+    
+
 def main():
     # TODO: Make this a CLI prompt.
     word_source = './nouns.txt' # From: http://www.desiquintans.com/downloads/nounlist/nounlist.txt
@@ -83,7 +104,7 @@ def main():
     print('\nThe number of unique words in {}:'.format(word_source), len(words))
     print('A subset of the words:', ', '.join(random.sample(words, 5)))
 
-
+    # Create the matching functions!
     method_name_to_method_matching_function = {
         'regex_match': create_match_using_regex(words),
         'trie_match': create_match_using_trie(words),
@@ -93,6 +114,10 @@ def main():
     
     test_functionality(method_name_to_method_matching_function, word_source)
     print('\nFunctional tests passed.')
+
+    print('\nAverage performance:')
+    for name, time in test_performance(method_name_to_method_matching_function).items():
+        print(' - {}: {} ms'.format(name, time))
 
 
 if __name__ == '__main__':
