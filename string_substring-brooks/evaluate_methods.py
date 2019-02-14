@@ -6,6 +6,7 @@ from matching_methods import create_match_function_using_native
 from matching_methods import create_match_function_using_regex
 from matching_methods import create_match_function_using_set_intersection
 from matching_methods import create_match_function_using_trie
+from matching_methods import create_match_function_using_flashtext
 
 
 def load_words(file_name):
@@ -54,6 +55,10 @@ def test_functionality(name_to_function_mapping, word_source):
         {
             'url': 'www.google.com/search?q=how-old-is-the-earth',
             'expected_words': frozenset({'earth','arch','art','ear','sea','search'})
+        },
+        {
+            'url': 'www.artie.com',
+            'expected_words': frozenset({'art','tie'})
         },
     ]
     for function_name in sorted(name_to_function_mapping.keys()):
@@ -107,9 +112,10 @@ def main():
     # Create the matching functions!
     method_name_to_method_matching_function = {
         'regex_match': create_match_function_using_regex(words),
-        # 'trie_match': create_match_function_using_trie(words),
-        # 'native_python': create_match_function_using_native(words),
-        # 'native_set_intersection': create_match_function_using_set_intersection(words)
+        'trie_match': create_match_function_using_trie(words),
+        'native_python': create_match_function_using_native(words),
+        'native_set_intersection': create_match_function_using_set_intersection(words),
+        'flashtext': create_match_function_using_flashtext(words)
     }
     
     test_functionality(method_name_to_method_matching_function, word_source)

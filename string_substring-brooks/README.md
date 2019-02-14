@@ -11,9 +11,7 @@ Please zip the contents of your solution named: `string_substring-[lastname].zip
 - The words we're trying to find in URLs changes slowly or not at all.  Because of this, I can create the data strutures, like this for example, used in the higher order `matching_methods.py` functions, before execution time instead of each time a substring lookup is evaluated.  I can do some "set up" work before returning a function to handle the matches. 
 - We need to know which words in the word source are in the URL, not only that at least one word from the word source is in the URL.
 - We care about words from any part of the URL, including the `www`'s, `.com`'s, and anything in the path.  Alterations could be made to 
-- Likewise, we care about finding subwords in the main portion of the URL.  For example `tail` should be in the result set of `captailone` despite `tail` not being what a human might say is a logical "word" in that example.
-- I assume the input URLs are Base64 decoded.
-
+- Likewise, we care about finding subwords in the main portion of the URL.  For example `tail` should be in the result set of `captailone` despite `tail` not being what a human might say is a logical "word" in that example.  It wouldn't be hard to apply a preprocessing function to strip `www.` and `.com/*`-like phrases if we only care about some of the URL.
 
 
 ### Structure of Submission:
@@ -28,6 +26,8 @@ Found in `matching_methods.py`, my considered solutions are:
 - Trie.  I created a Trie data structure in `hunters_trie.py` and use it to do prefix lookup of each of the possible string combinations in the URL.  It could be improved in a few ways, one of which is by using ASCII string integer values instead of their string values. 
 
 All the matching functions take in a single URL as their argument.  The time on average to match a URL would be lower if they took in an iterable of URLs, but I kept it this way because I imagine this app being some sort of "tagging" microservice that works on individual URLs at run time.  
+
+I dont use any forms of parallel computing anywhere.  This could seriously speed up things like the regex pattern evaluation.
 
 
 ### Running Code:

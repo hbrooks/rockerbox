@@ -16,6 +16,8 @@ Each lower level matching function returns a frozenset containing the matched wo
 import re
 import itertools
 
+from flashtext import KeywordProcessor
+
 from hunters_trie import Trie
 
 def _get_unique_sub_strings(string):
@@ -88,13 +90,15 @@ def create_match_function_using_regex(words):
     are created by:
         1. Seperating `words` into groups of the same character length.
         2. Creating RegEx matching patterns that look like `?=(word1|word2|...)`.
-        3. Then applying the RegEx patterns to the `url` in order of increasing word length.
-    The order the patterns are applied to the word matter because if we clumped words into a various
-
-
+        3. Then applying the RegEx patterns of words of identicle length to `url`, capturing matches.
+    We apply pattens containing words of the same length at the same time because of the nature of the nature
+    of the patterns.
     For Example: If words is {"a", "mn", "b", "xyz"}, we'd create length_to_words_of_that_length as
-    {1:["a","b"], 2:["mn"], 3:["xyz"]} and then patterns as [re.compile('?=(a|b)'), re.compile('?=(mn)'), re.compile('?=(xyz)')].
-    At runtime, we'd then apply patterns[0], patterns[1], ... and so on, capturing the results.  
+    {1:["a","b"], 2:["mn"], 3:["xyz"]} and then patterns as [re.compile('?=(a|b)'), re.compile('?=(mn)'), 
+    re.compile('?=(xyz)')].  At runtime, we'd then apply these patterns one at a time.  This type of 
+    thing could be done in parallel! 
+
+    This technique is faster than making a single regex expression for every word in `words`.
     """
     # This set up logic is a little confusing and could be written using comprehension expressions.
     d = {}
@@ -103,12 +107,8 @@ def create_match_function_using_regex(words):
         if l not in d:
             d[l] = []
         d[l].append(word)
-    pattern_strings = ['(?=({}))'.format('|'.join(d[l])) for l in sorted(d.keys())]
+    pattern_strings = ['(?=({}))'.format('|'.join(words_of_length_l)) for words_of_length_l in d.values()]
     patterns = [re.compile(p) for p in pattern_strings]
     def match(url):
         return frozenset({match for p in patterns for match in p.findall(url)})
     return match
-    # patterns = {word: re.compile(word) for word in words}
-    # def match(url):
-    #     return frozenset(word for word, pattern in patterns.items() if pattern.search(url))
-    # return match
