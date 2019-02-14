@@ -7,7 +7,7 @@ Found in `matching_methods.py`, my considered solutions are:
 - Using native Python substring. Example: `sub_string in string`.  I considered Python's `string.find()` method, but it seems that it should be used when we need to get the index of a substring.
 - Using Regular Expressions. I created large matching patterns from the words in the word source, then used non-greedy matching to find the matches. 
 - Using Set Intersection.  Faster than a list's O(N) lookup, set's provide constant order look up because they hash elements.  I leveraged this by creating a set of all the possible string combinations in a URL and doing a speedy set intersection between a set of the words in the word source and the string combinations in the URL. 
-- Trie.  I created a Trie data structure in `hunters_trie.py` and use it to do prefix lookup of each of the possible string combinations in the URL.  It could be improved in a few ways, one of which is by using ASCII string integer values instead of their string values. 
+- Using a Trie.  I created a Trie data structure in `hunters_trie.py` and use it to do prefix lookup of each of the possible string combinations in the URL.  It could be improved in a few ways, one of which is by using ASCII string integer values instead of their string values. 
 
 Exact details of each method can be found in the appropriate function in `matching_methods.py`.
 
