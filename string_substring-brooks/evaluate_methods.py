@@ -6,7 +6,6 @@ from matching_methods import create_match_function_using_native
 from matching_methods import create_match_function_using_regex
 from matching_methods import create_match_function_using_set_intersection
 from matching_methods import create_match_function_using_trie
-from matching_methods import create_match_function_using_flashtext
 
 
 def load_words(file_name):
@@ -115,7 +114,6 @@ def main():
         'trie_match': create_match_function_using_trie(words),
         'native_python': create_match_function_using_native(words),
         'native_set_intersection': create_match_function_using_set_intersection(words),
-        'flashtext': create_match_function_using_flashtext(words)
     }
     
     test_functionality(method_name_to_method_matching_function, word_source)

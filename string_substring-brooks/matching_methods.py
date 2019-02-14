@@ -16,8 +16,6 @@ Each lower level matching function returns a frozenset containing the matched wo
 import re
 import itertools
 
-from flashtext import KeywordProcessor
-
 from hunters_trie import Trie
 
 def _get_unique_sub_strings(string):
